@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>A Royal Valentine Journey</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Pinyon+Script&family=EB+Garamond:ital,wght@1,800&display=swap');
+
+        :root {
+            --romantic-red: #ff385c;
+            --soft-pink: #ffafbd;
+            --warm-orange: #ffc3a0;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100dvh; /* Dynamic viewport height for mobile browsers */
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--soft-pink) 0%, var(--warm-orange) 100%);
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Global Heart Pop System --- */
+        #heart-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .pop-heart {
+            position: absolute;
+            color: rgba(255, 56, 92, 0.4);
+            animation: bubblePop 3s ease-in-out forwards;
+        }
+
+        @keyframes bubblePop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); opacity: 0.8; }
+            100% { transform: scale(1.8) translateY(-100px); opacity: 0; }
+        }
+
+        /* --- Page Structures --- */
+        .page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .bold-heading { 
+            font-size: clamp(1.8rem, 8vw, 3.2rem); 
+            font-weight: 900; 
+            color: var(--romantic-red); 
+            margin: 10px 0; 
+            text-shadow: 1px 1px 5px rgba(255,255,255,0.5);
+            line-height: 1.2;
+        }
+
+        .sub-heading { 
+            font-size: clamp(1.1rem, 5vw, 1.8rem); 
+            font-weight: bold; 
+            color: #333; 
+            margin: 5px 0;
+        }
+
+        /* --- Carousel Slider --- */
+        .carousel-container { 
+            width: 100%; 
+            max-width: 500px; 
+            overflow: hidden; 
+            position: relative; 
+            margin: 15px 0;
+        }
+        .carousel-track { 
+            display: flex; 
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); 
+            width: 800%; 
+        }
+        .slide { 
+            width: 12.5%; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding: 10px;
+        }
+        .slide p { 
+            font-size: clamp(0.9rem, 4vw, 1.2rem); 
+            color: var(--romantic-red); 
+            font-weight: bold;
+            margin-top: 10px;
+            line-height: 1.4;
+        }
+
+        /* --- Page 3: Photo Grid --- */
+        .royal-letter-page { background: #000; overflow: hidden; }
+        
+        .photo-grid-container {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; 
+            column-count: 2; /* Mobile default */
+            column-gap: 10px;
+            padding: 10px;
+            opacity: 0.35; 
+            pointer-events: none;
+            animation: scrollVertical 25s linear infinite;
+        }
+
+        @media (min-width: 768px) {
+            .photo-grid-container { column-count: 5; }
+        }
+
+        @keyframes scrollVertical {
+            0% { transform: translateY(-50%); }
+            100% { transform: translateY(0); }
+        }
+
+        .grid-img { 
+            width: 100%; 
+            margin-bottom: 10px; 
+            border-radius: 8px; 
+            display: block;
+            break-inside: avoid;
+        }
+
+        /* --- Letter Styling --- */
+        .letter-content {
+            z-index: 100;
+            background: rgba(253, 245, 230, 0.98);
+            padding: clamp(20px, 5vw, 40px);
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 8px double #5d4037;
+            box-shadow: 0 0 40px rgba(0,0,0,0.6);
+            position: relative;
+            transform: translateY(100vh);
+            transition: transform 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .letter-content.active { transform: translateY(0); }
+
+        .bubu-dudu-top {
+            position: absolute;
+            top: -50px;
+            right: -15px;
+            width: clamp(80px, 20vw, 120px);
+            z-index: 110;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.2));
+        }
+
+        #typewriter { 
+            font-family: 'Pinyon Script', cursive; 
+            font-size: clamp(1.4rem, 6vw, 2.2rem); 
+            color: #2c1e1a; 
+            text-align: left; 
+            line-height: 1.5; 
+        }
+        
+        .wax-seal { 
+            width: 100px; 
+            height: 100px; 
+            margin: 20px auto 0;
+            opacity: 0; 
+            transition: 0.8s cubic-bezier(0.34, 1.56, 0.64, 1); 
+            transform: scale(4); 
+        }
+        .wax-seal.drop { opacity: 1; transform: scale(1); }
+        .wax-seal img { width: 100%; height: 100%; object-fit: contain; }
+
+        /* --- Utilities --- */
+        .gif-box { 
+            width: clamp(200px, 60vw, 300px); 
+            aspect-ratio: 1/1; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            background: white; 
+            padding: 10px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        .gif-box img { width: 100%; height: 100%; object-fit: contain; }
+
+        .btn-container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px;
+            width: 100%;
+            position: relative;
+        }
+
+        .action-btn { 
+            padding: 15px 35px; 
+            font-size: clamp(1.2rem, 5vw, 1.8rem); 
+            font-weight: 900; 
+            border-radius: 50px; 
+            border: none; 
+            cursor: pointer; 
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            white-space: nowrap;
+        }
+        
+        #yesBtn { background: #4CAF50; color: white; z-index: 20; }
+        #noBtn { background: #f44336; color: white; z-index: 10; }
+    </style>
+</head>
+<body>
+
+    <div id="heart-field"></div>
+
+    <audio id="bgMusic" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="page1" class="page" style="display: flex;">
+        <div class="gif-box"><img id="main-gif" src="bubu-dudu-rides.webp"></div>
+        <h1 class="bold-heading">Will you be my valentine?</h1>
+        <div class="btn-container">
+            <button id="yesBtn" class="action-btn">❤️ Yes ❤️</button>
+            <button id="noBtn" class="action-btn">No</button>
+        </div>
+    </div>
+
+    <div id="page2" class="page">
+        <h2 class="bold-heading">Our Valentine's Journey...</h2>
+        <div class="carousel-container">
+            <div class="carousel-track" id="track"></div>
+        </div>
+        <button id="goLetter" class="action-btn" style="background: var(--romantic-red); color: white; margin-top: 20px; display: none;">Open My Letter ✉️</button>
+    </div>
+
+    <div id="page3" class="page royal-letter-page">
+        <div class="photo-grid-container" id="grid-container"></div>
+        <div class="letter-content" id="letter">
+            <img src="bubu-dudu-corner.webp" class="bubu-dudu-top" alt="Bubu Dudu">
+            <div id="typewriter"></div>
+            <div class="wax-seal" id="seal">
+                <img src="my-stamp.png" alt="Royal Stamp">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const sadGifs = ["bubu-dudu-sseeyall.webp", "bubu-dudu-sseeyall (1).webp", "bubu-dudu-sseeyall (2).webp", "Khoc.webp"];
+        const myPhotos = ["p1.png", "p2.png", "p3.png", "p4.png", "p5.png", "p6.png", "p7.png", "p8.png", "p9.png", "p10.png", "p11.png", "p12.png", "p13.png", "p14.png", "p15.png", "p16.png", "p17.png", "p18.png", "p19.png", "p20.png"];
+        
+        const dayData = [
+            { d: "Happy Rose Day", g: "rose.webp", m: "You are the most beautiful bloom in the garden of my life. 🌹" },
+            { d: "Happy Propose Day", g: "propose.webp", m: "I choose you today, tomorrow, and forever. 💍" },
+            { d: "Happy Chocolate Day", g: "chocolate.webp", m: "Your love is the sweetest treat I have ever known. 🍫" },
+            { d: "Happy Teddy Day", g: "teddy.webp", m: "You are my favorite person to cuddle. 🧸" },
+            { d: "Happy Promise Day", g: "promise.webp", m: "I promise to stand by you through every storm. 🤝" },
+            { d: "Happy Hug Day", g: "hug.webp", m: "Your arms are my favorite destination. 🤗" },
+            { d: "Happy Kiss Day", g: "kiss.webp", m: "A spark that ignites my soul. 💋" },
+            { d: "Happy Valentine's Day Babe", g: "valentine.webp", m: "You are my heart, my soul, and my entire world. ❤️" }
+        ];
+
+        let moveCount = 0;
+        let noClickCount = 0;
+        let yesPadding = 15;
+        let yesFontSize = 1.5;
+
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const mainGif = document.getElementById('main-gif');
+        const track = document.getElementById('track');
+
+        // --- Hearts Background ---
+        setInterval(() => {
+            const h = document.createElement('div');
+            h.className = 'pop-heart';
+            h.innerHTML = '❤️';
+            h.style.left = Math.random() * 90 + 'vw';
+            h.style.top = Math.random() * 90 + 'vh';
+            h.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            document.getElementById('heart-field').appendChild(h);
+            setTimeout(() => h.remove(), 3000);
+        }, 500);
+
+        // --- Page 1 Interactions ---
+        noBtn.addEventListener('touchstart', (e) => {
+            if (moveCount < 5) {
+                e.preventDefault();
+                moveButton();
+            }
+        });
+
+        noBtn.addEventListener('mouseover', () => {
+            if (window.innerWidth > 768 && moveCount < 5) moveButton();
+        });
+
+        function moveButton() {
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40);
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
+            moveCount++;
+        }
+
+        noBtn.addEventListener('click', () => {
+            if (moveCount >= 5) {
+                noClickCount++;
+                mainGif.src = sadGifs[Math.min(noClickCount - 1, sadGifs.length - 1)];
+                yesPadding += 8;
+                yesFontSize += 0.2;
+                yesBtn.style.padding = `${yesPadding}px ${yesPadding * 2}px`;
+                yesBtn.style.fontSize = `${yesFontSize}rem`;
+                const texts = ["Are you sure?", "Really??", "Please...", "🥺", "Why Nooo"];
+                noBtn.innerText = texts[Math.min(noClickCount - 1, texts.length - 1)];
+            }
+        });
+
+        // --- Page Transitions ---
+        yesBtn.addEventListener('click', () => {
+            document.getElementById('bgMusic').play().catch(() => {});
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'flex';
+            startCarousel();
+        });
+
+        function startCarousel() {
+            dayData.forEach(item => {
+                const slide = document.createElement('div');
+                slide.className = 'slide';
+                slide.innerHTML = `<div class="gif-box"><img src="${item.g}"></div><h2 class="sub-heading">${item.d}</h2><p>${item.m}</p>`;
+                track.appendChild(slide);
+            });
+
+            let curSlide = 0;
+            const interval = setInterval(() => {
+                if (curSlide < 7) {
+                    curSlide++;
+                    track.style.transform = `translateX(-${curSlide * 12.5}%)`;
+                } else {
+                    clearInterval(interval);
+                    document.getElementById('goLetter').style.display = 'block';
+                }
+            }, 4000); // 4 seconds per slide
+        }
+
+        // --- Final Letter Logic ---
+        document.getElementById('goLetter').addEventListener('click', () => {
+            document.getElementById('page2').style.display = 'none';
+            document.getElementById('page3').style.display = 'flex';
+            
+            const gridContainer = document.getElementById('grid-container');
+            [...myPhotos, ...myPhotos].forEach(src => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'grid-img';
+                gridContainer.appendChild(img);
+            });
+
+            setTimeout(() => {
+                document.getElementById('letter').classList.add('active');
+                typeLetter("My Dear Abha,\n\nYou are the best thing I’ve ever held onto. In a world full of temporary things, you are my 'always.' Thank you for being my sunshine.\n\nI love you beyond words.\n\nYours Eternally,\nJasmeet");
+            }, 1000);
+        });
+
+        function typeLetter(text) {
+            let i = 0;
+            const target = document.getElementById('typewriter');
+            function typing() {
+                if (i < text.length) {
+                    target.innerHTML += text.charAt(i) === '\n' ? '<br>' : text.charAt(i);
+                    i++;
+                    setTimeout(typing, 60);
+                } else {
+                    setTimeout(() => document.getElementById('seal').classList.add('drop'), 500);
+                }
+            }
+            typing();
+        }
+    </script>
+</body>
+</html>

@@ -161,7 +161,7 @@
         <div class="carousel-container">
             <div class="carousel-track" id="track"></div>
         </div>
-        <button id="goLetter" class="action-btn" style="background: var(--romantic-red); color: white; margin-top: 30px; display: none;">Open My Letter ✉️</button>
+        <button id="goLetter" class="action-btn" style="background: var(--romantic-red); color: white; margin-top: 30px, margin-bottom: 30px; display: none;">Open My Letter ✉️</button>
     </div>
 
     <div id="page3" class="page royal-letter-page">
@@ -248,7 +248,7 @@
         dayData.forEach(item => {
             const slide = document.createElement('div');
             slide.className = 'slide';
-            slide.innerHTML = `<div class="gif-box"><img src="${item.g}"></div><h2 class="sub-heading">${item.d}</h2><p style="font-size: 1.4rem; color: #ff385c; font-weight:bold;">${item.m}</p>`;
+            slide.innerHTML = `<div class="gif-box"><img src="${item.g}"></div><h2 class="sub-heading">${item.d}</h2><p style="font-size: 1.6rem; color: #ff385c; font-weight:bold;">${item.m}</p>`;
             track.appendChild(slide);
         });
 
@@ -327,4 +327,5 @@
 </body>
 
 </html>
+
 
